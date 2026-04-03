@@ -1,0 +1,196 @@
+/* Reset & basics */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root{
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --accent: #6c63ff;
+  --green: #28a745;
+  --red: #dc3545;
+  --muted: #6b7280;
+  --shadow: 0 6px 18px rgba(29,31,41,0.06);
+  --radius: 12px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+body{
+  background: linear-gradient(180deg, #eef2ff 0%, var(--bg) 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: #111827;
+}
+
+/* Container */
+.container{
+  width: 100%;
+  max-width: 920px;
+  background: transparent;
+}
+
+/* Header */
+header{
+  text-align: left;
+  margin-bottom: 18px;
+}
+header h1{
+  font-size: 28px;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+.subtitle{
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Cards & layout */
+main{
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr 360px;
+  align-items: start;
+}
+
+/* On small screens, single column */
+@media (max-width: 820px){
+  main{ grid-template-columns: 1fr; }
+}
+
+/* Balance card (left) */
+.balance-card{
+  background: var(--card);
+  padding: 18px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.balance-card h2{ font-size: 16px; color: var(--muted); }
+.balance-amount{ font-size: 28px; font-weight: 700; margin-top: 6px; }
+
+/* Income/Expenses small boxes */
+.inc-exp{
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+.inc-exp > div{
+  flex:1;
+  background: #fbfbff;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid rgba(15,23,42,0.04);
+}
+.money{ font-weight: 700; margin-top: 6px; display:block; }
+.plus{ color: var(--green); }
+.minus{ color: var(--red); }
+
+/* Right column: form */
+.add-transaction{
+  background: var(--card);
+  padding: 16px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.add-transaction h2{ font-size: 16px; margin-bottom: 8px; }
+
+.form-control{
+  display:flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.form-control label{
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.form-control input, .form-control select{
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(15,23,42,0.06);
+  font-size: 14px;
+  outline: none;
+}
+.form-control.inline{ flex-direction: row; gap: 8px; align-items: center; }
+.form-control.inline label{ width: 100px; margin-bottom: 0; font-size: 14px; color: var(--muted); }
+
+/* Button */
+.btn{
+  display:inline-block;
+  background: linear-gradient(90deg,var(--accent), #5a4dff);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  margin-top: 6px;
+  box-shadow: 0 6px 18px rgba(108,99,255,0.12);
+}
+.btn:active{ transform: translateY(1px); }
+
+/* History list */
+.history{
+  grid-column: 1 / -1;
+}
+.history h2{ font-size: 16px; margin-bottom: 10px; color: #0f172a; }
+.transactions-list{
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.transaction{
+  background: var(--card);
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-left: 6px solid transparent;
+}
+.transaction.plus{ border-left-color: var(--green); }
+.transaction.minus{ border-left-color: var(--red); }
+
+.transaction .details{
+  display:flex;
+  flex-direction: column;
+}
+.transaction .details .desc{
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.transaction .details .time{
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* amount & delete */
+.transaction .amount{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.delete-btn{
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  font-weight: 700;
+  color: #9ca3af;
+}
+.delete-btn:hover{ color: #ef4444; }
+
+/* Footer */
+footer{
+  margin-top: 18px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}

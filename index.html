@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Expense Tracker</h1>
+      <p class="subtitle">Track your income and expenses — simple & lightweight</p>
+    </header>
+
+    <main>
+      <section class="balance-card">
+        <div>
+          <h2>Balance</h2>
+          <p id="balance" class="money balance-amount">₹0.00</p>
+        </div>
+        <div class="inc-exp">
+          <div>
+            <h3>Income</h3>
+            <p id="money-plus" class="money plus">+₹0.00</p>
+          </div>
+          <div>
+            <h3>Expenses</h3>
+            <p id="money-minus" class="money minus">-₹0.00</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="add-transaction">
+        <h2>Add New Transaction</h2>
+        <form id="transaction-form">
+          <div class="form-control">
+            <label for="text">Description</label>
+            <input type="text" id="text" placeholder="e.g., Groceries" required />
+          </div>
+
+          <div class="form-control">
+            <label for="amount">Amount (use negative for expense or choose type)</label>
+            <input type="number" id="amount" placeholder="e.g., 250 or -150" required step="0.01" />
+          </div>
+
+          <div class="form-control inline">
+            <label>Type</label>
+            <select id="type">
+              <option value="auto">Auto (based on sign)</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+          </div>
+
+          <button class="btn" type="submit">Add Transaction</button>
+        </form>
+      </section>
+
+      <section class="history">
+        <h2>History</h2>
+        <ul id="list" class="transactions-list"></ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built with ❤️ • Save data locally (localStorage)</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
