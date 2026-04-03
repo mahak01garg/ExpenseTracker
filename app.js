@@ -9,8 +9,23 @@ const form = document.getElementById('transaction-form');
 const textEl = document.getElementById('text');
 const amountEl = document.getElementById('amount');
 const typeEl = document.getElementById('type');
+const transactionCountEl = document.getElementById('transaction-count');
+const latestActivityEl = document.getElementById('latest-activity');
+const cashflowStatusEl = document.getElementById('cashflow-status');
 
 const LOCAL_STORAGE_KEY = 'transactions_v1';
+const currencyFormatter = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  minimumFractionDigits: 2
+});
+const dateFormatter = new Intl.DateTimeFormat('en-IN', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit'
+});
 
 // Load initial transactions from localStorage or sample
 let transactions = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [
@@ -32,15 +47,16 @@ function addTransactionDOM(transaction) {
   item.classList.add('transaction');
   item.classList.add(transaction.amount < 0 ? 'minus' : 'plus');
 
-  const amountAbs = Math.abs(Number(transaction.amount)).toFixed(2);
+  const amountAbs = Math.abs(Number(transaction.amount));
+  const transactionTime = transaction.idTimestamp || parseInt(transaction.id.substr(0, 8), 36);
 
   item.innerHTML = `
     <div class="details">
       <div class="desc">${escapeHtml(transaction.text)}</div>
-      <div class="time">${new Date(transaction.idTimestamp || parseInt(transaction.id.substr(0,8),36)).toLocaleString()}</div>
+      <div class="time">${dateFormatter.format(new Date(transactionTime))}</div>
     </div>
     <div class="amount">
-      <strong>${sign}₹${amountAbs}</strong>
+      <strong>${sign}${currencyFormatter.format(amountAbs)}</strong>
       <button class="delete-btn" title="Delete" data-id="${transaction.id}">✕</button>
     </div>
   `;
@@ -61,9 +77,28 @@ function updateValues() {
   const income = amounts.filter(a => a > 0).reduce((acc, val) => acc + val, 0);
   const expense = amounts.filter(a => a < 0).reduce((acc, val) => acc + val, 0);
 
-  balanceEl.innerText = `₹${total.toFixed(2)}`;
-  moneyPlusEl.innerText = `+₹${income.toFixed(2)}`;
-  moneyMinusEl.innerText = `-₹${Math.abs(expense).toFixed(2)}`;
+  balanceEl.innerText = currencyFormatter.format(total);
+  moneyPlusEl.innerText = `+${currencyFormatter.format(income)}`;
+  moneyMinusEl.innerText = `-${currencyFormatter.format(Math.abs(expense))}`;
+  transactionCountEl.innerText = String(transactions.length);
+
+  if (transactions.length === 0) {
+    latestActivityEl.innerText = 'No transactions yet';
+    cashflowStatusEl.innerText = 'Balanced start';
+    return;
+  }
+
+  const latestTransaction = transactions[transactions.length - 1];
+  const latestLabel = latestTransaction.amount < 0 ? 'Spent' : 'Received';
+  latestActivityEl.innerText = `${latestLabel} ${currencyFormatter.format(Math.abs(latestTransaction.amount))} on ${latestTransaction.text}`;
+
+  if (total > 0) {
+    cashflowStatusEl.innerText = 'You are in the green';
+  } else if (total < 0) {
+    cashflowStatusEl.innerText = 'Spending is ahead right now';
+  } else {
+    cashflowStatusEl.innerText = 'Perfectly balanced';
+  }
 }
 
 // Remove transaction by id
@@ -115,8 +150,17 @@ function updateLocalStorage() {
 function refreshUI() {
   // clear list
   listEl.innerHTML = '';
-  // render transactions
-  transactions.slice().reverse().forEach(addTransactionDOM); // reverse to keep newest first
+  if (transactions.length === 0) {
+    listEl.innerHTML = `
+      <li class="empty-state">
+        <strong>No transactions added</strong>
+        Start by adding your first income or expense entry.
+      </li>
+    `;
+  } else {
+    // render transactions
+    transactions.slice().reverse().forEach(addTransactionDOM); // reverse to keep newest first
+  }
   updateValues();
 }
 
